@@ -36,3 +36,6 @@ variable "vpc_private_cidrs" {
   description = "CIDR for private Subnet"
   type        = list(string)
 }
+
+#Platform Config
+variable "platform_repository_url" {}

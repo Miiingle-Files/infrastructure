@@ -17,4 +17,6 @@ module "dev_environment" {
   vpc_cidr          = "10.10.0.0/16"
   vpc_public_cidrs  = ["10.10.0.0/20", "10.10.16.0/20", "10.10.32.0/20"]
   vpc_private_cidrs = ["10.10.128.0/20", "10.10.144.0/20", "10.10.160.0/20"]
+
+  platform_repository_url = module.artifacts.platform_repository_url
 }
