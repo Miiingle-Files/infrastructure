@@ -23,6 +23,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 EOF
 }
 
+//TODO: refine the s3 access later
 resource "aws_iam_policy" "lambda_logging" {
   name        = "${var.org}_${var.env}_lambda_logging"
   path        = "/"
@@ -46,6 +47,13 @@ resource "aws_iam_policy" "lambda_logging" {
         "ec2:CreateNetworkInterface",
         "ec2:DescribeNetworkInterfaces",
         "ec2:DeleteNetworkInterface"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "s3:*"
       ],
       "Effect": "Allow",
       "Resource": "*"

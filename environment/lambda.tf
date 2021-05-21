@@ -3,10 +3,10 @@ resource "aws_lambda_function" "platform" {
   role          = aws_iam_role.iam_for_lambda.arn
 
   package_type = "Image"
-  image_uri = "${var.platform_repository_url}:latest"
+  image_uri    = "${var.platform_repository_url}:latest"
 
   memory_size = 1024
-  timeout = 25
+  timeout     = 25
 
   vpc_config {
     security_group_ids = [module.vpc.default_security_group_id]
@@ -28,3 +28,5 @@ resource "aws_lambda_function" "platform" {
     ignore_changes = [image_uri, memory_size]
   }
 }
+
+//TODO: setup aurora connection
