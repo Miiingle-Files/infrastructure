@@ -24,6 +24,7 @@ EOF
 }
 
 //TODO: refine the s3 access later
+//TODO: refine the secrets manager access
 resource "aws_iam_policy" "lambda_logging" {
   name        = "${var.org}_${var.env}_lambda_logging"
   path        = "/"
@@ -54,6 +55,20 @@ resource "aws_iam_policy" "lambda_logging" {
     {
       "Action": [
         "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "secretsmanager:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "rds-data:*"
       ],
       "Effect": "Allow",
       "Resource": "*"

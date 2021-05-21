@@ -8,6 +8,14 @@ resource "aws_lambda_function" "platform" {
   memory_size = 1024
   timeout     = 25
 
+  environment {
+    variables = {
+      RDS_CLUSTER_ARN = aws_rds_cluster.main.arn
+      RDS_CLUSTER_DATABASE = aws_rds_cluster.main.database_name
+      RDS_CLUSTER_SECRETS = aws_secretsmanager_secret.aurora_credentials.arn
+    }
+  }
+
   vpc_config {
     security_group_ids = [module.vpc.default_security_group_id]
     subnet_ids         = module.vpc.private_subnets
