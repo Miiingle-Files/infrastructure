@@ -9,6 +9,10 @@ module "ci_pipeline" {
   reverse_domain = var.reverse_domain
 
   sms_destination = var.admin_mobile_number
+
+  dev_rds_cluster_arn         = module.dev_environment.rds_cluster_arn
+  dev_rds_cluster_database    = module.dev_environment.rds_cluster_database
+  dev_rds_cluster_secrets_arn = module.dev_environment.rds_cluster_database
 }
 
 module "dev_environment" {

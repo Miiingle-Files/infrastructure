@@ -15,3 +15,7 @@ variable "reverse_domain" {}
 variable "sms_destination" {
   default = "0917***"
 }
+
+variable "dev_rds_cluster_arn" {}
+variable "dev_rds_cluster_database" {}
+variable "dev_rds_cluster_secrets_arn" {}
