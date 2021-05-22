@@ -1,0 +1,164 @@
+//resource "aws_codepipeline" "platform" {
+//  name = "${var.org}-platform-pipeline"
+//  role_arn = aws_iam_role.code_pipeline.arn
+//
+//  artifact_store {
+//    location = aws_s3_bucket.pipeline_artifacts.bucket
+//    type = "S3"
+//  }
+//
+//  stage {
+//    name = "Source"
+//
+//    action {
+//      name = "Source"
+//      category = "Source"
+//      owner = "AWS"
+//      provider = "CodeCommit"
+//      version = "1"
+//
+//      configuration = {
+//        Conn
+//      }
+//    }
+//  }
+//
+//  stage {
+//    name = "Build"
+//
+//    action {
+//      name = "Build"
+//      category = "Build"
+//      owner = "AWS"
+//      provider = "CodeBuild"
+//      version = "1"
+//    }
+//  }
+//
+//  stage {
+//    name = "Deploy"
+//
+//    action {
+//      category = "Deploy"
+//      name = "Deploy"
+//      owner = "AWS"
+//      provider = "CodeDeploy"
+//      version = "1"
+//    }
+//  }
+//}
+
+resource "aws_s3_bucket" "pipeline_artifacts" {
+  bucket = "${var.reverse_domain}.pipeline.artifacts"
+}
+
+resource "aws_iam_role" "code_pipeline" {
+  name               = "${var.org}-codepipeline-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codebuild.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codedeploy.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+
+  tags = local.common_tags
+}
+
+//our codebuild instance should have the same policy as the lambda runtime
+resource "aws_iam_role_policy_attachment" "dev_lambda_policy_attachment" {
+  policy_arn = var.dev_lambda_platform_policy_arn
+  role       = aws_iam_role.code_pipeline.name
+}
+
+//TODO: refine the policy, use the link below as reference
+//https://github.com/miiingle/infrastructure/blob/main/shared/ci/template/codebuild_policy.json
+resource "aws_iam_role_policy" "code_build" {
+  name = "${var.org}-codepipeline-shared-policy"
+  role = aws_iam_role.code_pipeline.name
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ]
+    },
+    {
+      "Effect" : "Allow",
+      "Action" : [
+        "codecommit:*"
+      ],
+      "Resource" : [
+        "${aws_codecommit_repository.platform.arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateNetworkInterface",
+        "ec2:DescribeDhcpOptions",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:DeleteNetworkInterface",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
+      ],
+      "Resource": ["*"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:CreateNetworkInterfacePermission"
+      ],
+      "Resource": [
+        "arn:aws:ec2:us-east-1::network-interface/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:*"
+      ],
+      "Resource": ["*"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:*"
+      ],
+      "Resource": ["*"]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "*"
+      ],
+      "Resource": ["*"]
+    }
+  ]
+}
+POLICY
+}
