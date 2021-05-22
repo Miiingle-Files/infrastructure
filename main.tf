@@ -6,6 +6,8 @@ module "artifacts" {
 module "ci_pipeline" {
   source = "./ci_pipeline"
   org    = var.org
+
+  sms_destination = var.admin_mobile_number
 }
 
 module "dev_environment" {

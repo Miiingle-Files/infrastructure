@@ -1,4 +1,5 @@
-variable "alarm_sms_destination" {
+# pro tip: set this using the env (export TF_VAR_admin_mobile_number=6391xxxxxxx)
+variable "admin_mobile_number" {
   description = "Mobile number to send the Alarms via SNS"
   type        = string
   sensitive   = true
