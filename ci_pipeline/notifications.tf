@@ -1,5 +1,5 @@
 resource "aws_sns_topic" "pipeline_events" {
-  name = "${var.org}_pipeline_events"
+  name         = "${var.org}_pipeline_events"
   display_name = "${upper(var.org)} Pipeline Events"
 }
 

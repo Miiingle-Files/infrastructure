@@ -10,6 +10,8 @@ variable "org" {
   type        = string
 }
 
+variable "reverse_domain" {}
+
 variable "sms_destination" {
   default = "0917***"
 }

@@ -4,8 +4,9 @@ module "artifacts" {
 }
 
 module "ci_pipeline" {
-  source = "./ci_pipeline"
-  org    = var.org
+  source         = "./ci_pipeline"
+  org            = var.org
+  reverse_domain = var.reverse_domain
 
   sms_destination = var.admin_mobile_number
 }
