@@ -12,7 +12,14 @@ module "ci_pipeline" {
 
   dev_rds_cluster_arn         = module.dev_environment.rds_cluster_arn
   dev_rds_cluster_database    = module.dev_environment.rds_cluster_database
-  dev_rds_cluster_secrets_arn = module.dev_environment.rds_cluster_database
+  dev_rds_cluster_secrets_arn = module.dev_environment.rds_cluster_secret_arn
+
+  platform_repo_url = module.artifacts.platform_repository_url
+
+  dev_vpc_id                     = module.dev_environment.vpc_id
+  dev_vpc_private_subnets        = module.dev_environment.vpc_private_subnets
+  dev_vpc_default_sg_id          = module.dev_environment.vpc_default_sg_id
+  dev_lambda_platform_policy_arn = module.dev_environment.lambda_policy_arn
 }
 
 module "dev_environment" {

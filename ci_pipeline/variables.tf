@@ -19,3 +19,11 @@ variable "sms_destination" {
 variable "dev_rds_cluster_arn" {}
 variable "dev_rds_cluster_database" {}
 variable "dev_rds_cluster_secrets_arn" {}
+variable "dev_vpc_id" {}
+variable "dev_vpc_default_sg_id" {}
+variable "dev_vpc_private_subnets" {}
+variable "dev_lambda_platform_policy_arn" {}
+
+variable "platform_repo_url" {
+  description = "ECR repository url of the platform image"
+}

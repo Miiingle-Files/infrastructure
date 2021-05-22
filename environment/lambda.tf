@@ -10,9 +10,9 @@ resource "aws_lambda_function" "platform" {
 
   environment {
     variables = {
-      RDS_CLUSTER_ARN = aws_rds_cluster.main.arn
+      RDS_CLUSTER_ARN      = aws_rds_cluster.main.arn
       RDS_CLUSTER_DATABASE = aws_rds_cluster.main.database_name
-      RDS_CLUSTER_SECRETS = aws_secretsmanager_secret.aurora_credentials.arn
+      RDS_CLUSTER_SECRETS  = aws_secretsmanager_secret.aurora_credentials.arn
     }
   }
 
@@ -36,5 +36,3 @@ resource "aws_lambda_function" "platform" {
     ignore_changes = [image_uri, memory_size]
   }
 }
-
-//TODO: setup aurora connection
