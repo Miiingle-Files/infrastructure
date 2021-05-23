@@ -38,6 +38,8 @@ resource "aws_codepipeline" "platform" {
       version   = "1"
       run_order = 2
 
+      namespace = "Unit_Test"
+
       configuration = {
         ProjectName = aws_codebuild_project.platform_test.name
       }
@@ -56,6 +58,12 @@ resource "aws_codepipeline" "platform" {
 
       configuration = {
         ProjectName = aws_codebuild_project.platform.name
+        EnvironmentVariables = jsonencode([
+          {
+            name = "THAT_OTHER_THING"
+            value = "#{Unit_Test.TEST_MESSAGE_FROM_TEST}"
+          }
+        ])
       }
 
       input_artifacts  = ["source_output"]

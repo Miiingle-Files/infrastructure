@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   exported-variables:
-    TEST_MESSAGE_FROM_TEST: "default message from test"
+    - TEST_MESSAGE_FROM_TEST
 
 phases:
   install:
