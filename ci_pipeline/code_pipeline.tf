@@ -1,52 +1,63 @@
-//resource "aws_codepipeline" "platform" {
-//  name = "${var.org}-platform-pipeline"
-//  role_arn = aws_iam_role.code_pipeline.arn
-//
-//  artifact_store {
-//    location = aws_s3_bucket.pipeline_artifacts.bucket
-//    type = "S3"
-//  }
-//
-//  stage {
-//    name = "Source"
-//
-//    action {
-//      name = "Source"
-//      category = "Source"
-//      owner = "AWS"
-//      provider = "CodeCommit"
-//      version = "1"
-//
-//      configuration = {
-//        Conn
-//      }
-//    }
-//  }
-//
-//  stage {
-//    name = "Build"
-//
-//    action {
-//      name = "Build"
-//      category = "Build"
-//      owner = "AWS"
-//      provider = "CodeBuild"
-//      version = "1"
-//    }
-//  }
-//
-//  stage {
-//    name = "Deploy"
-//
-//    action {
-//      category = "Deploy"
-//      name = "Deploy"
-//      owner = "AWS"
-//      provider = "CodeDeploy"
-//      version = "1"
-//    }
-//  }
-//}
+resource "aws_codepipeline" "platform" {
+  name     = "${var.org}-platform-pipeline"
+  role_arn = aws_iam_role.code_pipeline.arn
+
+  artifact_store {
+    location = aws_s3_bucket.pipeline_artifacts.bucket
+    type     = "S3"
+  }
+
+  stage {
+    name = "Source"
+
+    action {
+      name      = "Source"
+      category  = "Source"
+      owner     = "AWS"
+      provider  = "CodeCommit"
+      version   = "1"
+      run_order = 1
+
+      configuration = {
+        RepositoryName = aws_codecommit_repository.platform.repository_name
+        BranchName     = "master"
+      }
+
+      output_artifacts = ["source_output"]
+    }
+  }
+
+  stage {
+    name = "Build"
+
+    action {
+      name     = "Build"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
+
+      configuration = {
+        ProjectName = aws_codebuild_project.platform.name
+      }
+
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["build_output"]
+    }
+  }
+
+  //  stage {
+  //    name = "Deploy"
+  //
+  //    action {
+  //      category = "Deploy"
+  //      name     = "Deploy"
+  //      owner    = "AWS"
+  //      provider = "CodeDeploy"
+  //      version  = "1"
+  //    }
+  //  }
+}
 
 resource "aws_s3_bucket" "pipeline_artifacts" {
   bucket = "${var.reverse_domain}.pipeline.artifacts"
@@ -69,6 +80,13 @@ resource "aws_iam_role" "code_pipeline" {
       "Effect": "Allow",
       "Principal": {
         "Service": "codedeploy.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "codepipeline.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
     }

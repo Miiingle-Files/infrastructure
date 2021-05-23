@@ -5,17 +5,19 @@ resource "aws_codedeploy_app" "platform" {
   tags = local.common_tags
 }
 
-resource "aws_codedeploy_deployment_group" "platform" {
-  app_name               = aws_codedeploy_app.platform.name
-  deployment_group_name  = "platform"
-  service_role_arn       = aws_iam_role.code_pipeline.arn
-  deployment_config_name = aws_codedeploy_deployment_config.platform.id
-
+//resource "aws_codedeploy_deployment_group" "platform" {
+//  app_name               = aws_codedeploy_app.platform.name
+//  deployment_group_name  = "platform"
+//  service_role_arn       = aws_iam_role.code_pipeline.arn
+//  deployment_config_name = aws_codedeploy_deployment_config.platform.id
+//
 //  auto_rollback_configuration {
-//    enabled = true
-//    events  = []
+//    enabled = false
 //  }
-}
+//
+//  blue_green_deployment_config {
+//  }
+//}
 
 resource "aws_codedeploy_deployment_config" "platform" {
   deployment_config_name = "${var.org}-platform-config"
