@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - docker version
+      - java --version
+      - $(aws ecr get-login --no-include-email)
+  build:
+    commands:
+      - ./gradlew clean test
+      - ./gradlew dockerBuildNative
+      - docker tag platform:latest $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
+      - docker tag platform:latest $CONTAINER_REPOSITORY_URL:latest
+  post_build:
+    commands:
+      - docker push $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
+      - docker push $CONTAINER_REPOSITORY_URL:latest

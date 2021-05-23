@@ -31,11 +31,12 @@ resource "aws_codepipeline" "platform" {
     name = "Build"
 
     action {
-      name     = "Build"
-      category = "Build"
-      owner    = "AWS"
-      provider = "CodeBuild"
-      version  = "1"
+      name      = "Build"
+      category  = "Build"
+      owner     = "AWS"
+      provider  = "CodeBuild"
+      version   = "1"
+      run_order = 2
 
       configuration = {
         ProjectName = aws_codebuild_project.platform.name
@@ -50,11 +51,12 @@ resource "aws_codepipeline" "platform" {
   //    name = "Deploy"
   //
   //    action {
-  //      category = "Deploy"
-  //      name     = "Deploy"
-  //      owner    = "AWS"
-  //      provider = "CodeDeploy"
-  //      version  = "1"
+  //      category  = "Deploy"
+  //      name      = "Deploy"
+  //      owner     = "AWS"
+  //      provider  = "CodeDeploy"
+  //      version   = "1"
+  //      run_order = 3
   //    }
   //  }
 }

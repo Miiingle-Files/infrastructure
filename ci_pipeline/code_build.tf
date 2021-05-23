@@ -1,6 +1,6 @@
 resource "aws_codebuild_project" "platform" {
-  name                   = "${var.org}_platform"
-  description            = "Build the docker image for the Lambda function the primarily carries the role of the API"
+  name                   = "${upper(var.org)}-Platform-Publish-Image"
+  description            = "Test, Build and Push a new Image to ECR"
   badge_enabled          = true
   build_timeout          = 20
   concurrent_build_limit = 1
@@ -9,8 +9,9 @@ resource "aws_codebuild_project" "platform" {
   source_version = "master"
 
   source {
-    type     = "CODECOMMIT"
-    location = aws_codecommit_repository.platform.clone_url_http
+    type      = "CODECOMMIT"
+    location  = aws_codecommit_repository.platform.clone_url_http
+    buildspec = file("${path.module}/templates/buildspec-publish-to-ecr.yml")
   }
 
   artifacts {
