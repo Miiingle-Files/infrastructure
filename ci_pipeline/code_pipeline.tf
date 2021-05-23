@@ -31,12 +31,28 @@ resource "aws_codepipeline" "platform" {
     name = "Build"
 
     action {
+      name      = "Unit_Test"
+      category  = "Test"
+      owner     = "AWS"
+      provider  = "CodeBuild"
+      version   = "1"
+      run_order = 2
+
+      configuration = {
+        ProjectName = aws_codebuild_project.platform_test.name
+      }
+
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["test_output"]
+    }
+
+    action {
       name      = "Build"
       category  = "Build"
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
-      run_order = 2
+      run_order = 3
 
       configuration = {
         ProjectName = aws_codebuild_project.platform.name

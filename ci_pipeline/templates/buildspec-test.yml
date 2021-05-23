@@ -1,0 +1,22 @@
+version: 0.2
+
+env:
+  exported-variables:
+    TEST_MESSAGE_FROM_TEST: "default message from test"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - docker version
+      - java --version
+  build:
+    commands:
+      - ./gradlew clean test
+      - export TEST_MESSAGE_FROM_TEST="this was changed somewhere down the road"
+reports:
+  unit-tests:
+    files:
+      - "build/test-results/test/*.xml"
+    file-format: "JUNITXML"

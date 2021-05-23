@@ -10,7 +10,6 @@ phases:
       - $(aws ecr get-login --no-include-email)
   build:
     commands:
-      - ./gradlew clean test
       - ./gradlew dockerBuildNative
       - docker tag platform:latest $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
       - docker tag platform:latest $CONTAINER_REPOSITORY_URL:latest
