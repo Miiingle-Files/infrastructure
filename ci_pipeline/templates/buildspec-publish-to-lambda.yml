@@ -10,4 +10,10 @@ phases:
       - echo "Updating Lambda Function = $FUNCTION_NAME"
       - echo "New Image = $IMAGE_URI"
       - export NEW_LAMBDA_VERSION=`aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI --publish --query 'Version' --output text`
-      - echo $NEW_LAMBDA_VERSION
+      - touch "appspec.yml"
+      - echo $NEW_LAMBDA_VERSION >> appspec.yml
+
+artifacts:
+  name: appspec
+  files:
+    - appspec.yml

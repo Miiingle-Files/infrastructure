@@ -11,12 +11,11 @@ resource "aws_codepipeline" "platform" {
     name = "Source"
 
     action {
-      name      = "Source"
-      category  = "Source"
-      owner     = "AWS"
-      provider  = "CodeCommit"
-      version   = "1"
-      run_order = 1
+      name     = "Source"
+      category = "Source"
+      owner    = "AWS"
+      provider = "CodeCommit"
+      version  = "1"
 
       configuration = {
         RepositoryName = aws_codecommit_repository.platform.repository_name
@@ -36,7 +35,7 @@ resource "aws_codepipeline" "platform" {
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
-      run_order = 2
+      run_order = 1
 
       namespace = "Unit_Test"
 
@@ -53,7 +52,7 @@ resource "aws_codepipeline" "platform" {
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
-      run_order = 3
+      run_order = 2
 
       namespace = "Publish_To_ECR"
 
@@ -64,13 +63,18 @@ resource "aws_codepipeline" "platform" {
       input_artifacts = ["source_output"]
     }
 
+  }
+
+  stage {
+    name = "Deploy_to_Dev"
+
     action {
       name      = "Publish_to_Lambda"
       category  = "Build"
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
-      run_order = 4
+      run_order = 3
 
       configuration = {
         ProjectName = aws_codebuild_project.platform_publish_to_lambda.name
@@ -82,22 +86,25 @@ resource "aws_codepipeline" "platform" {
         ])
       }
 
-      input_artifacts = ["source_output"]
+      input_artifacts  = ["source_output"]
+      output_artifacts = ["dev_appspec"]
     }
-  }
 
-  //  stage {
-  //    name = "Deploy"
-  //
-  //    action {
-  //      category  = "Deploy"
-  //      name      = "Deploy"
-  //      owner     = "AWS"
-  //      provider  = "CodeDeploy"
-  //      version   = "1"
-  //      run_order = 3
-  //    }
-  //  }
+    //    action {
+    //      name     = "Deploy"
+    //      category = "Deploy"
+    //      owner    = "AWS"
+    //      provider = "CodeDeploy"
+    //      version  = "1"
+    //
+    //      configuration = {
+    //        ApplicationName     = aws_codedeploy_app.platform.name
+    //        DeploymentGroupName = aws_codedeploy_deployment_group.platform.deployment_group_name
+    //      }
+    //
+    //      input_artifacts = ["dev_appspec"]
+    //    }
+  }
 }
 
 resource "aws_s3_bucket" "pipeline_artifacts" {

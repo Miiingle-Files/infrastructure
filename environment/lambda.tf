@@ -36,3 +36,13 @@ resource "aws_lambda_function" "platform" {
     ignore_changes = [image_uri, memory_size]
   }
 }
+
+resource "aws_lambda_alias" "platform_prod" {
+  function_name    = aws_lambda_function.platform.function_name
+  function_version = "$LATEST"
+  name             = "prod"
+
+  lifecycle {
+    ignore_changes = [function_version]
+  }
+}
