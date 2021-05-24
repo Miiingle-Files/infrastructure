@@ -29,3 +29,7 @@ output "lambda_policy_arn" {
 output "lambda_platform_function_name" {
   value = aws_lambda_function.platform.function_name
 }
+
+output "lambda_platform_function_alias_name" {
+  value = aws_lambda_alias.platform_prod.name
+}

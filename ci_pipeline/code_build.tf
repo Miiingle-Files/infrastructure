@@ -38,11 +38,6 @@ resource "aws_codebuild_project" "platform_test" {
       name  = "RDS_CLUSTER_SECRETS"
       value = var.dev_rds_cluster_secrets_arn
     }
-
-    environment_variable {
-      name  = "CONTAINER_REPOSITORY_URL"
-      value = var.platform_repo_url
-    }
   }
 
   vpc_config {
@@ -79,21 +74,6 @@ resource "aws_codebuild_project" "platform_publish_to_ecr" {
     compute_type    = "BUILD_GENERAL1_LARGE"
     image           = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
     privileged_mode = true
-
-    environment_variable {
-      name  = "RDS_CLUSTER_ARN"
-      value = var.dev_rds_cluster_arn
-    }
-
-    environment_variable {
-      name  = "RDS_CLUSTER_DATABASE"
-      value = var.dev_rds_cluster_database
-    }
-
-    environment_variable {
-      name  = "RDS_CLUSTER_SECRETS"
-      value = var.dev_rds_cluster_secrets_arn
-    }
 
     environment_variable {
       name  = "CONTAINER_REPOSITORY_URL"
@@ -142,19 +122,18 @@ resource "aws_codebuild_project" "platform_publish_to_lambda" {
 
     environment_variable {
       name = "FUNCTION_ALIAS"
-      value = "prod"
+      value = var.dev_lambda_platform_function_alias_name
     }
 
     environment_variable {
       name  = "APPSPEC_TEMPLATE"
-      value = file("${path.module}/templates/appspec-lambda.yml")
+      value = file("${path.module}/templates/appspec-lambda.json")
     }
 
     environment_variable {
       name  = "IMAGE_URI"
       value = "${var.platform_repo_url}:latest"
     }
-
   }
 
   vpc_config {

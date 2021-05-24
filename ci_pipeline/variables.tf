@@ -24,6 +24,7 @@ variable "dev_vpc_default_sg_id" {}
 variable "dev_vpc_private_subnets" {}
 variable "dev_lambda_platform_policy_arn" {}
 variable "dev_lambda_platform_function_name" {}
+variable "dev_lambda_platform_function_alias_name" {}
 
 variable "platform_repo_url" {
   description = "ECR repository url of the platform image"

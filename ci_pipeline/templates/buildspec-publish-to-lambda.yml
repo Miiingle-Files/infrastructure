@@ -1,16 +1,19 @@
 version: 0.2
 
 phases:
-  build:
+  install:
     commands:
       - echo "Updating Lambda Function = $FUNCTION_NAME"
       - echo "New Image = $IMAGE_URI"
+  build:
+    commands:
       - export CURRENT_LAMBDA_VERSION=`aws lambda get-alias --function-name $FUNCTION_NAME --name $FUNCTION_ALIAS --query 'FunctionVersion' --output text`
       - export NEW_LAMBDA_VERSION=`aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI --publish --query 'Version' --output text`
-      - touch "appspec.yml"
-      - echo $APPSPEC_TEMPLATE >> appspec.yml
+      - echo $APPSPEC_TEMPLATE
+      - echo $APPSPEC_TEMPLATE
+      - touch "appspec.json"
+      - echo $APPSPEC_TEMPLATE > appspec.json
 
 artifacts:
-  name: appspec
   files:
-    - appspec.yml
+    - appspec.json

@@ -1,0 +1,16 @@
+{
+  "version": 0.0,
+  "Resources": [
+    {
+      "mf-dev-platform": {
+        "Type": "AWS::Lambda::Function",
+        "Properties": {
+          "Name": "mf-dev-platform",
+          "Alias": "prod",
+          "CurrentVersion": "9",
+          "TargetVersion": "10"
+        }
+      }
+    }
+  ]
+}
