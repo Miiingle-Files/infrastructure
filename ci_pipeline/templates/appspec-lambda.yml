@@ -1,9 +1,9 @@
 version: 0.0
 Resources:
-  - mf-dev-platform:
+  - $FUNCTION_NAME:
       Type: AWS::Lambda::Function
       Properties:
-        Name: "mf-dev-platform"
-        Alias: "prod"
-        CurrentVersion: "3"
-        TargetVersion: "4"
+        Name: "$FUNCTION_NAME"
+        Alias: "$FUNCTION_ALIAS"
+        CurrentVersion: "$CURRENT_LAMBDA_VERSION"
+        TargetVersion: "$NEW_LAMBDA_VERSION"

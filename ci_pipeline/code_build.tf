@@ -141,6 +141,16 @@ resource "aws_codebuild_project" "platform_publish_to_lambda" {
     }
 
     environment_variable {
+      name = "FUNCTION_ALIAS"
+      value = "prod"
+    }
+
+    environment_variable {
+      name  = "APPSPEC_TEMPLATE"
+      value = file("${path.module}/templates/appspec-lambda.yml")
+    }
+
+    environment_variable {
       name  = "IMAGE_URI"
       value = "${var.platform_repo_url}:latest"
     }

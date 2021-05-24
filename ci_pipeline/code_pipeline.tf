@@ -74,7 +74,7 @@ resource "aws_codepipeline" "platform" {
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
-      run_order = 3
+      run_order = 1
 
       configuration = {
         ProjectName = aws_codebuild_project.platform_publish_to_lambda.name
@@ -90,20 +90,21 @@ resource "aws_codepipeline" "platform" {
       output_artifacts = ["dev_appspec"]
     }
 
-    //    action {
-    //      name     = "Deploy"
-    //      category = "Deploy"
-    //      owner    = "AWS"
-    //      provider = "CodeDeploy"
-    //      version  = "1"
-    //
-    //      configuration = {
-    //        ApplicationName     = aws_codedeploy_app.platform.name
-    //        DeploymentGroupName = aws_codedeploy_deployment_group.platform.deployment_group_name
-    //      }
-    //
-    //      input_artifacts = ["dev_appspec"]
-    //    }
+    action {
+      name     = "Deploy"
+      category = "Deploy"
+      owner    = "AWS"
+      provider = "CodeDeploy"
+      version  = "1"
+      run_order = 2
+
+      configuration = {
+        ApplicationName     = aws_codedeploy_app.platform.name
+        DeploymentGroupName = aws_codedeploy_deployment_group.platform.deployment_group_name
+      }
+
+      input_artifacts = ["dev_appspec"]
+    }
   }
 }
 
