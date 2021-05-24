@@ -1,9 +1,5 @@
 version: 0.2
 
-env:
-  exported-variables:
-    - TEST_MESSAGE_FROM_TEST
-
 phases:
   install:
     runtime-versions:
@@ -14,7 +10,6 @@ phases:
   build:
     commands:
       - ./gradlew clean test
-      - export TEST_MESSAGE_FROM_TEST="this was changed somewhere down the road"
 reports:
   unit-tests:
     files:

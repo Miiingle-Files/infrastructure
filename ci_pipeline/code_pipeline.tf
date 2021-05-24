@@ -44,30 +44,45 @@ resource "aws_codepipeline" "platform" {
         ProjectName = aws_codebuild_project.platform_test.name
       }
 
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["test_output"]
+      input_artifacts = ["source_output"]
     }
 
     action {
-      name      = "Build"
+      name      = "Publish_to_ECR"
       category  = "Build"
       owner     = "AWS"
       provider  = "CodeBuild"
       version   = "1"
       run_order = 3
 
+      namespace = "Publish_To_ECR"
+
       configuration = {
-        ProjectName = aws_codebuild_project.platform.name
+        ProjectName = aws_codebuild_project.platform_publish_to_ecr.name
+      }
+
+      input_artifacts = ["source_output"]
+    }
+
+    action {
+      name      = "Publish_to_Lambda"
+      category  = "Build"
+      owner     = "AWS"
+      provider  = "CodeBuild"
+      version   = "1"
+      run_order = 4
+
+      configuration = {
+        ProjectName = aws_codebuild_project.platform_publish_to_lambda.name
         EnvironmentVariables = jsonencode([
           {
-            name = "THAT_OTHER_THING"
-            value = "#{Unit_Test.TEST_MESSAGE_FROM_TEST}"
+            name  = "IMAGE_URI"
+            value = "#{Publish_To_ECR.IMAGE_URI}"
           }
         ])
       }
 
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["build_output"]
+      input_artifacts = ["source_output"]
     }
   }
 

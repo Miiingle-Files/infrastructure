@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  exported-variables:
+    - IMAGE_URI
+
 phases:
   install:
     runtime-versions:
@@ -14,6 +18,7 @@ phases:
       - ./gradlew dockerBuildNative
       - docker tag platform:latest $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
       - docker tag platform:latest $CONTAINER_REPOSITORY_URL:latest
+      - export IMAGE_URI="$CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER"
   post_build:
     commands:
       - docker push $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER

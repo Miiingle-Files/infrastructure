@@ -25,3 +25,7 @@ output "rds_cluster_database" {
 output "lambda_policy_arn" {
   value = aws_iam_policy.lambda_logging.arn
 }
+
+output "lambda_platform_function_name" {
+  value = aws_lambda_function.platform.function_name
+}

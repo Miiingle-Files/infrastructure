@@ -1,0 +1,13 @@
+version: 0.2
+
+env:
+  exported-variables:
+    - NEW_LAMBDA_VERSION
+
+phases:
+  build:
+    commands:
+      - echo "Updating Lambda Function = $FUNCTION_NAME"
+      - echo "New Image = $IMAGE_URI"
+      - export NEW_LAMBDA_VERSION=`aws lambda update-function-code --function-name $FUNCTION_NAME --image-uri $IMAGE_URI --publish --query 'Version' --output text`
+      - echo $NEW_LAMBDA_VERSION
