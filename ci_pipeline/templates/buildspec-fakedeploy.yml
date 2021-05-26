@@ -8,7 +8,7 @@ phases:
     commands:
       - ls
       - cat appspec.json
-      - aws s3 cp appspec.json s3://CODE_PIPELINE_BUCKET/$CODE_PIPELINE_BUILD_ID/appspec.json
+      - aws s3 cp appspec.json s3://$CODE_PIPELINE_BUCKET/$CODE_PIPELINE_BUILD_ID/appspec.json
       - export REVISION="revisionType=S3, s3Location={bucket=$CODE_PIPELINE_BUCKET, key=$CODE_PIPELINE_BUILD_ID/appspec.json,bundleType=JSON}"
-      - aws s3 ls s3://CODE_PIPELINE_BUCKET/$CODE_PIPELINE_BUILD_ID/
+      - aws s3 ls s3://$CODE_PIPELINE_BUCKET/$CODE_PIPELINE_BUILD_ID/
       - aws deploy create-deployment --revision=$REVISION --application-name=$APPLICATION_NAME --deployment-group-name=$DEPLOYMENT_GROUP_NAME

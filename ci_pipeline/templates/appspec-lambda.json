@@ -2,13 +2,13 @@
   "version": 0.0,
   "Resources": [
     {
-      "mf-dev-platform": {
+      "${FUNCTION_NAME}": {
         "Type": "AWS::Lambda::Function",
         "Properties": {
-          "Name": "mf-dev-platform",
-          "Alias": "prod",
-          "CurrentVersion": "9",
-          "TargetVersion": "10"
+          "Name": "${FUNCTION_NAME}",
+          "Alias": "${FUNCTION_ALIAS}",
+          "CurrentVersion": "0",
+          "TargetVersion": "1"
         }
       }
     }

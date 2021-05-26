@@ -102,6 +102,16 @@ resource "aws_codepipeline" "platform" {
 
       configuration = {
         ProjectName = aws_codebuild_project.platform_fake_deploy.name
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "CODE_PIPELINE_BUILD_ID"
+            value = "#{codepipeline.PipelineExecutionId}"
+          },
+          {
+            name  = "CODE_PIPELINE_BUCKET"
+            value = aws_s3_bucket.pipeline_artifacts.bucket
+          }
+        ])
       }
 
       input_artifacts = ["dev_appspec"]

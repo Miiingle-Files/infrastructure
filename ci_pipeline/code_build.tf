@@ -127,7 +127,7 @@ resource "aws_codebuild_project" "platform_publish_to_lambda" {
 
     environment_variable {
       name  = "APPSPEC_TEMPLATE"
-      value = file("${path.module}/templates/appspec-lambda.json")
+      value = data.template_file.appspec_json.rendered
     }
 
     environment_variable {
@@ -143,6 +143,14 @@ resource "aws_codebuild_project" "platform_publish_to_lambda" {
   }
 
   tags = local.common_tags
+}
+
+data "template_file" "appspec_json" {
+  template = file("${path.module}/templates/appspec-lambda.json")
+  vars = {
+    FUNCTION_NAME  = var.dev_lambda_platform_function_name
+    FUNCTION_ALIAS = var.dev_lambda_platform_function_alias_name
+  }
 }
 
 resource "aws_codebuild_project" "platform_fake_deploy" {
@@ -178,16 +186,6 @@ resource "aws_codebuild_project" "platform_fake_deploy" {
     environment_variable {
       name  = "DEPLOYMENT_GROUP_NAME"
       value = aws_codedeploy_deployment_group.platform.deployment_group_name
-    }
-
-    environment_variable {
-      name  = "CODE_PIPELINE_BUCKET"
-      value = aws_s3_bucket.pipeline_artifacts.bucket
-    }
-
-    environment_variable {
-      name  = "CODE_PIPELINE_BUILD_ID"
-      value = "#{codepipeline.PipelineExecutionId}"
     }
   }
 
