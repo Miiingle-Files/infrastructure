@@ -121,7 +121,62 @@ resource "aws_codebuild_project" "platform_publish_to_lambda" {
     }
 
     environment_variable {
-      name = "FUNCTION_ALIAS"
+      name  = "FUNCTION_ALIAS"
+      value = var.dev_lambda_platform_function_alias_name
+    }
+
+    environment_variable {
+      name  = "APPSPEC_TEMPLATE"
+      value = file("${path.module}/templates/appspec-lambda.json")
+    }
+
+    environment_variable {
+      name  = "IMAGE_URI"
+      value = "${var.platform_repo_url}:latest"
+    }
+  }
+
+  vpc_config {
+    security_group_ids = [var.dev_vpc_default_sg_id]
+    subnets            = var.dev_vpc_private_subnets
+    vpc_id             = var.dev_vpc_id
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_codebuild_project" "platform_fake_deploy" {
+  name                   = "${upper(var.org)}-Platform-FakeDeploy"
+  description            = "A temporary workaround since CodeDeploy does not integrate well with AWS"
+  build_timeout          = 5
+  concurrent_build_limit = 1
+  service_role           = aws_iam_role.code_pipeline.arn
+
+  source_version = "master"
+
+  source {
+    buildspec = file("${path.module}/templates/buildspec-fakedeploy.yml")
+    type      = "CODECOMMIT"
+    location  = aws_codecommit_repository.platform.clone_url_http
+  }
+
+  artifacts {
+    type = "NO_ARTIFACTS"
+  }
+
+  environment {
+    type            = "LINUX_CONTAINER"
+    compute_type    = "BUILD_GENERAL1_LARGE"
+    image           = "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+    privileged_mode = true
+
+    environment_variable {
+      name  = "FUNCTION_NAME"
+      value = var.dev_lambda_platform_function_name
+    }
+
+    environment_variable {
+      name  = "FUNCTION_ALIAS"
       value = var.dev_lambda_platform_function_alias_name
     }
 

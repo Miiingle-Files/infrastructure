@@ -16,11 +16,11 @@ module "ci_pipeline" {
 
   platform_repo_url = module.artifacts.platform_repository_url
 
-  dev_vpc_id                        = module.dev_environment.vpc_id
-  dev_vpc_private_subnets           = module.dev_environment.vpc_private_subnets
-  dev_vpc_default_sg_id             = module.dev_environment.vpc_default_sg_id
-  dev_lambda_platform_policy_arn    = module.dev_environment.lambda_policy_arn
-  dev_lambda_platform_function_name = module.dev_environment.lambda_platform_function_name
+  dev_vpc_id                              = module.dev_environment.vpc_id
+  dev_vpc_private_subnets                 = module.dev_environment.vpc_private_subnets
+  dev_vpc_default_sg_id                   = module.dev_environment.vpc_default_sg_id
+  dev_lambda_platform_policy_arn          = module.dev_environment.lambda_policy_arn
+  dev_lambda_platform_function_name       = module.dev_environment.lambda_platform_function_name
   dev_lambda_platform_function_alias_name = module.dev_environment.lambda_platform_function_alias_name
 }
 

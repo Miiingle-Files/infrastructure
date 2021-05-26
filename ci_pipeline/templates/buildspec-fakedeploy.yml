@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - jq --version
+  build:
+    commands:
+      - jq help
+      - ls
+      - cat appspec.json
+#      - aws deploy create-deployment --application-name mf-platform --deployment-group-name platform

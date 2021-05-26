@@ -90,21 +90,39 @@ resource "aws_codepipeline" "platform" {
       output_artifacts = ["dev_appspec"]
     }
 
+    //TODO: temporarily do this
+    //https://awscli.amazonaws.com/v2/documentation/api/latest/reference/deploy/create-deployment.html
     action {
-      name     = "Deploy"
-      category = "Deploy"
-      owner    = "AWS"
-      provider = "CodeDeploy"
-      version  = "1"
+      name      = "Deploy_WorkAround"
+      category  = "Build"
+      owner     = "AWS"
+      provider  = "CodeBuild"
+      version   = "1"
       run_order = 2
 
       configuration = {
-        ApplicationName     = aws_codedeploy_app.platform.name
-        DeploymentGroupName = aws_codedeploy_deployment_group.platform.deployment_group_name
+        ProjectName = aws_codebuild_project.platform_fake_deploy.name
       }
 
       input_artifacts = ["dev_appspec"]
     }
+
+    //TODO: fix this once we figure out how to integrate codedeploy properly into codepipeline
+    //    action {
+    //      name     = "Deploy"
+    //      category = "Deploy"
+    //      owner    = "AWS"
+    //      provider = "CodeDeploy"
+    //      version  = "1"
+    //      run_order = 2
+    //
+    //      configuration = {
+    //        ApplicationName     = aws_codedeploy_app.platform.name
+    //        DeploymentGroupName = aws_codedeploy_deployment_group.platform.deployment_group_name
+    //      }
+    //
+    //      input_artifacts = ["dev_appspec"]
+    //    }
   }
 }
 
