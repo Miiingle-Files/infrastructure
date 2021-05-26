@@ -171,23 +171,23 @@ resource "aws_codebuild_project" "platform_fake_deploy" {
     privileged_mode = true
 
     environment_variable {
-      name  = "FUNCTION_NAME"
-      value = var.dev_lambda_platform_function_name
+      name  = "APPLICATION_NAME"
+      value = aws_codedeploy_app.platform.name
     }
 
     environment_variable {
-      name  = "FUNCTION_ALIAS"
-      value = var.dev_lambda_platform_function_alias_name
+      name  = "DEPLOYMENT_GROUP_NAME"
+      value = aws_codedeploy_deployment_group.platform.deployment_group_name
     }
 
     environment_variable {
-      name  = "APPSPEC_TEMPLATE"
-      value = file("${path.module}/templates/appspec-lambda.json")
+      name  = "CODE_PIPELINE_BUCKET"
+      value = aws_s3_bucket.pipeline_artifacts.bucket
     }
 
     environment_variable {
-      name  = "IMAGE_URI"
-      value = "${var.platform_repo_url}:latest"
+      name  = "CODE_PIPELINE_BUILD_ID"
+      value = "#{codepipeline.PipelineExecutionId}"
     }
   }
 
