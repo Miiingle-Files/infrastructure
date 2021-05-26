@@ -12,9 +12,10 @@ phases:
       - echo $APPSPEC_TEMPLATE
       - echo $APPSPEC_TEMPLATE
       - touch "appspec.json"
-      - echo $APPSPEC_TEMPLATE > appspec.json
-      - jq -c ".Resources[0].\"${FUNCTION_NAME}\".Properties.CurrentVersion=${CURRENT_LAMBDA_VERSION}" appspec.json > appspec.json
-      - jq -c ".Resources[0].\"${FUNCTION_NAME}\".Properties.TargetVersion=${NEW_LAMBDA_VERSION}" appspec.json > appspec.json
+      - echo $APPSPEC_TEMPLATE > temp1.json
+      - jq -c ".Resources[0].\"${FUNCTION_NAME}\".Properties.CurrentVersion=${CURRENT_LAMBDA_VERSION}" temp1.json > temp2.json
+      - jq -c ".Resources[0].\"${FUNCTION_NAME}\".Properties.TargetVersion=${NEW_LAMBDA_VERSION}" temp2.json > appspec.json
+      - cat appspec.json
 
 artifacts:
   files:
