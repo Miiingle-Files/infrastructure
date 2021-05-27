@@ -8,7 +8,9 @@ module "vpc" {
   private_subnets = var.vpc_private_cidrs
   public_subnets  = var.vpc_public_cidrs
 
-  enable_nat_gateway = true
+  single_nat_gateway     = true
+  enable_nat_gateway     = true
+  one_nat_gateway_per_az = false
 
   tags = local.common_tags
 }
