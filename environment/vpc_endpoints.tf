@@ -2,7 +2,9 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_id       = module.vpc.vpc_id
   service_name = "com.amazonaws.${var.aws_region}.s3"
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {
+    Name = "S3 VPC Endpoint: ${var.org}-${var.env}"
+  })
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3" {
@@ -19,5 +21,7 @@ resource "aws_vpc_endpoint" "rds_data" {
   private_dns_enabled = true
   subnet_ids          = module.vpc.private_subnets
 
-  tags = local.common_tags
+  tags = merge(local.common_tags, {
+    Name = "RDS Data Private Interface: ${var.org}-${var.env}"
+  })
 }
