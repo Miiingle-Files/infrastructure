@@ -17,6 +17,7 @@ resource "aws_vpc_endpoint" "rds_data" {
   vpc_endpoint_type   = "Interface"
   security_group_ids  = [module.vpc.default_security_group_id]
   private_dns_enabled = true
+  subnet_ids          = module.vpc.private_subnets
 
   tags = local.common_tags
 }
