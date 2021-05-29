@@ -39,3 +39,7 @@ variable "vpc_private_cidrs" {
 
 #Platform Config
 variable "platform_repository_url" {}
+
+#DNS
+variable "dns_root" {}
+variable "dns_prefix" {}

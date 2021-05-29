@@ -35,4 +35,7 @@ module "dev_environment" {
   vpc_private_cidrs = ["10.10.128.0/20", "10.10.144.0/20", "10.10.160.0/20"]
 
   platform_repository_url = module.artifacts.platform_repository_url
+
+  dns_root   = var.domain
+  dns_prefix = "dev.api.files"
 }

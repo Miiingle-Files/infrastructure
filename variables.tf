@@ -15,6 +15,10 @@ variable "reverse_domain" {
   default = "net.miiingle.files"
 }
 
+variable "domain" {
+  default = "miiingle.net"
+}
+
 variable "aws_region" {
   description = "AWS Resources created region"
   type        = string
