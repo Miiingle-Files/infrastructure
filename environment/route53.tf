@@ -37,7 +37,7 @@ resource "aws_acm_certificate_validation" "api_gateway_ssl_cert_validation" {
 }
 
 resource "aws_route53_record" "api_gateway_cname" {
-  provider   = aws.route53_region
+  provider = aws.route53_region
 
   zone_id = data.aws_route53_zone.main.zone_id
   name    = var.dns_prefix

@@ -56,7 +56,9 @@ resource "aws_apigatewayv2_route" "main" {
   api_id    = aws_apigatewayv2_api.main.id
   route_key = "${local.api_methods[count.index]} /{proxy+}"
 
-  target = "integrations/${aws_apigatewayv2_integration.main.id}"
+  target             = "integrations/${aws_apigatewayv2_integration.main.id}"
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.cognito_jwt.id
 }
 
 resource "aws_apigatewayv2_integration" "main" {
@@ -96,4 +98,16 @@ resource "aws_apigatewayv2_api_mapping" "api_gateway" {
     aws_acm_certificate.api_gateway_ssl,
     aws_acm_certificate_validation.api_gateway_ssl_cert_validation
   ]
+}
+
+resource "aws_apigatewayv2_authorizer" "cognito_jwt" {
+  api_id           = aws_apigatewayv2_api.main.id
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+  name             = "cognito-jwt-authorizer"
+
+  jwt_configuration {
+    audience = ["app"]
+    issuer   = "https://${aws_cognito_user_pool.main.endpoint}"
+  }
 }
