@@ -36,6 +36,8 @@ module "dev_environment" {
 
   platform_repository_url = module.artifacts.platform_repository_url
 
-  dns_root   = var.domain
-  dns_prefix = "dev.api.files"
+  dns_root        = var.domain
+  dns_prefix_api  = "dev.api.files"
+  dns_prefix_auth = "dev.auth.files"
+  dns_prefix_web  = "dev.app.files"
 }

@@ -42,4 +42,6 @@ variable "platform_repository_url" {}
 
 #DNS
 variable "dns_root" {}
-variable "dns_prefix" {}
+variable "dns_prefix_api" {}
+variable "dns_prefix_auth" {}
+variable "dns_prefix_web" {}

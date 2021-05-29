@@ -8,7 +8,7 @@ resource "aws_apigatewayv2_api" "main" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins     = ["http://localhost:3000"]
+    allow_origins     = ["http://localhost:3000", "https://${var.dns_prefix_web}.${var.dns_root}"]
     allow_credentials = true
     allow_headers     = ["*"]
     allow_methods     = ["*"]
