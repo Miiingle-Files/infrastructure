@@ -118,3 +118,12 @@ resource "aws_route53_record" "cognito" {
     zone_id                = local.cognito_zone_id
   }
 }
+
+resource "aws_route53_record" "web_app_cname" {
+  provider = aws.route53_region
+  zone_id  = data.aws_route53_zone.main.zone_id
+  name     = "${var.dns_prefix_web}.${var.dns_root}"
+  type     = "CNAME"
+  records  = [aws_cloudfront_distribution.frontend_webapp_distribution.domain_name]
+  ttl      = 60
+}

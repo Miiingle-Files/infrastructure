@@ -111,6 +111,25 @@ resource "aws_cognito_user_pool" "main" {
 resource "aws_cognito_user_pool_client" "web" {
   name                                 = "web_app"
   user_pool_id                         = aws_cognito_user_pool.main.id
+  generate_secret                      = false
+  allowed_oauth_flows_user_pool_client = true
+
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_USER_SRP_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH"
+  ]
+
+  supported_identity_providers = ["COGNITO"]
+  callback_urls                = ["http://localhost:3000/auth/callback", "https://${var.dns_prefix_web}.${var.dns_root}/auth/callback"]
+  logout_urls                  = ["http://localhost:3000/auth/logout", "https://${var.dns_prefix_web}.${var.dns_root}/auth/logout"]
+  allowed_oauth_flows          = ["code", "implicit"]
+  allowed_oauth_scopes         = concat(["openid", "email"], aws_cognito_resource_server.backend.scope_identifiers)
+}
+
+resource "aws_cognito_user_pool_client" "ios" {
+  name                                 = "ios"
+  user_pool_id                         = aws_cognito_user_pool.main.id
   generate_secret                      = true
   allowed_oauth_flows_user_pool_client = true
 
