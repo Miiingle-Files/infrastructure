@@ -108,8 +108,8 @@ resource "aws_cognito_user_pool" "main" {
   tags = local.common_tags
 }
 
-resource "aws_cognito_user_pool_client" "ios_client" {
-  name                                 = "ios"
+resource "aws_cognito_user_pool_client" "web" {
+  name                                 = "web_app"
   user_pool_id                         = aws_cognito_user_pool.main.id
   generate_secret                      = true
   allowed_oauth_flows_user_pool_client = true
@@ -124,7 +124,23 @@ resource "aws_cognito_user_pool_client" "ios_client" {
   callback_urls                = ["http://localhost:3000/auth/callback", "https://${var.dns_prefix_web}.${var.dns_root}/auth/callback"]
   logout_urls                  = ["http://localhost:3000/auth/logout", "https://${var.dns_prefix_web}.${var.dns_root}/auth/logout"]
   allowed_oauth_flows          = ["code", "implicit"]
-  allowed_oauth_scopes         = ["openid", "email"]
+  allowed_oauth_scopes         = concat(["openid", "email"], aws_cognito_resource_server.backend.scope_identifiers)
+}
+
+resource "aws_cognito_resource_server" "backend" {
+  user_pool_id = aws_cognito_user_pool.main.id
+  name         = "Miiingle Files Platform"
+  identifier   = "https://${var.dns_prefix_api}.${var.dns_root}"
+
+  scope {
+    scope_name        = "root"
+    scope_description = "All access pass"
+  }
+
+  scope {
+    scope_name        = "standard"
+    scope_description = "Regular user access pass"
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "main" {
